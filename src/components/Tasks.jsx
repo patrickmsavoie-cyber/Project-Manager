@@ -1,11 +1,18 @@
-import Input from "./Input";
 import NewTask from "./NewTask";
 
-export default function Tasks({ onHandleCheck, tasks, onAdd, onDelete }) {
+export default function Tasks({
+  isArchived,
+  onHandleCheck,
+  tasks,
+  onAdd,
+  onDelete,
+}) {
+  const disabled = isArchived && "disabled";
+
   return (
-    <section>
+    <section className={disabled}>
       <h2 className="text-2xl font-bold text-stone-700 mb-4">Tasks</h2>
-      <NewTask onAdd={onAdd} />
+      {!isArchived && <NewTask onAdd={onAdd} />}
       {tasks.length === 0 ? (
         <p className="text-stone-800 my-4">
           This project does not have any tasks yet.
@@ -13,7 +20,6 @@ export default function Tasks({ onHandleCheck, tasks, onAdd, onDelete }) {
       ) : (
         <ul className="p-4 mt-8 rounded-md mr-10">
           {tasks.map((task) => {
-            console.log(task);
             let classes = "flex task-info-list p-7 rounded-md mb-2";
 
             if (!task.isCompleted) {

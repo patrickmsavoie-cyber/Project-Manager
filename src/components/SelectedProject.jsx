@@ -7,6 +7,9 @@ export default function selectedProject({
   project,
   tasks,
   onHandleCheck,
+  onArchive,
+  onRestore,
+  isArchived,
 }) {
   const formattedDate = new Date(project.dueDate).toLocaleDateString("en-US", {
     year: "numeric",
@@ -14,13 +17,30 @@ export default function selectedProject({
     day: "numeric",
   });
 
+  const archived = isArchived ? (
+    <button
+      className="text-stone-600 hover:text-stone-950 mr-20"
+      onClick={onRestore}
+    >
+      Restore
+    </button>
+  ) : (
+    <button
+      className="text-stone-600 hover:text-stone-950 mr-20"
+      onClick={onArchive}
+    >
+      Archive
+    </button>
+  );
+
   return (
     <div className="w-35 mt-16">
       <header className="pb-4 mb-4 border-b-2 border-stone-300">
-        <div className="flex items-center justify-between">
+        <div className="flex project-header">
           <h1 className="text-3xl font-bold text-stone-600 mb-2">
             {project.title}
           </h1>
+          {archived}
           <button
             className="text-stone-600 hover:text-stone-950 mr-20"
             onClick={onDelete}
@@ -38,6 +58,7 @@ export default function selectedProject({
         onAdd={onAddTask}
         onDelete={onDeleteTask}
         tasks={tasks}
+        isArchived={isArchived}
       />
     </div>
   );

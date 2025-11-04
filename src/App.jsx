@@ -10,6 +10,7 @@ function App() {
     selectedProjectId: undefined,
     projects: [],
     tasks: [],
+    archivedProjects: [],
   });
   const selectedProjectTasks = projectsState.tasks.filter(
     (task) => task.projectId === projectsState.selectedProjectId
@@ -105,17 +106,65 @@ function App() {
         projects: prevState.projects.filter(
           (project) => project.id !== prevState.selectedProjectId
         ),
+        archivedProjects: prevState.archivedProjects.filter(
+          (project) => project.id !== prevState.selectedProjectId
+        ),
       };
     });
   }
+
+  function handleArchiveProject() {
+    setProjectsState((prevState) => {
+      const projectToArchive = prevState.projects.find(
+        (project) => project.id === prevState.selectedProjectId
+      );
+      const updatedProjectList = prevState.projects.filter(
+        (project) => project.id !== prevState.selectedProjectId
+      );
+
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        projects: updatedProjectList,
+        archivedProjects: [projectToArchive, ...prevState.archivedProjects],
+      };
+    });
+  }
+
+  function handleRestoreProject() {
+    setProjectsState((prevState) => {
+      const projectToRestore = prevState.archivedProjects.find(
+        (project) => project.id === prevState.selectedProjectId
+      );
+      const updatedArchiveList = prevState.archivedProjects.filter(
+        (project) => project.id !== prevState.selectedProjectId
+      );
+
+      return {
+        ...prevState,
+        selectedProjectId: undefined,
+        archivedProjects: updatedArchiveList,
+        projects: [projectToRestore, ...prevState.projects],
+      };
+    });
+  }
+
+  console.log(projectsState.archivedProjects);
 
   const selectedProject = projectsState.projects.find(
     (project) => project.id === projectsState.selectedProjectId
   );
 
+  const selectedArchivedProject = projectsState.archivedProjects.find(
+    (project) => project.id === projectsState.selectedProjectId
+  );
+
   let content = (
     <SelectedProject
-      project={selectedProject}
+      onArchive={handleArchiveProject}
+      onRestore={handleRestoreProject}
+      project={selectedProject || selectedArchivedProject}
+      isArchived={selectedArchivedProject}
       onDelete={handleDeleteProject}
       onAddTask={handleAddTask}
       onDeleteTask={handleDeleteTask}
@@ -140,6 +189,7 @@ function App() {
           onStartAddProject={handleStartAddProject}
           projects={projectsState.projects}
           selectedProjectId={projectsState.selectedProjectId}
+          archivedProjects={projectsState.archivedProjects}
         />
         {content}
       </main>
