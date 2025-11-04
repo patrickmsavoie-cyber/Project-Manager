@@ -11,6 +11,9 @@ function App() {
     projects: [],
     tasks: [],
   });
+  const selectedProjectTasks = projectsState.tasks.filter(
+    (task) => task.projectId === projectsState.selectedProjectId
+  );
 
   function handleAddTask(text) {
     setProjectsState((prevState) => {
@@ -19,6 +22,7 @@ function App() {
         text: text,
         projectId: prevState.selectedProjectId,
         id: taskId,
+        isCompleted: false,
       };
 
       return {
@@ -33,6 +37,19 @@ function App() {
       return {
         ...prevState,
         tasks: prevState.tasks.filter((task) => task.id !== id),
+      };
+    });
+  }
+
+  function handleTaskCheck(id) {
+    setProjectsState((prevState) => {
+      const updatedTasks = prevState.tasks.map((task) =>
+        task.id === id ? { ...task, isCompleted: !task.isCompleted } : task
+      );
+
+      return {
+        ...prevState,
+        tasks: updatedTasks,
       };
     });
   }
@@ -102,7 +119,8 @@ function App() {
       onDelete={handleDeleteProject}
       onAddTask={handleAddTask}
       onDeleteTask={handleDeleteTask}
-      tasks={projectsState.tasks}
+      tasks={selectedProjectTasks}
+      onHandleCheck={handleTaskCheck}
     />
   );
 

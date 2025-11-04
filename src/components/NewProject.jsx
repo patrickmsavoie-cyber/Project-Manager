@@ -28,6 +28,7 @@ export default function NewProject({ onAdd, onCancel }) {
       title: enteredTitle,
       description: enteredDescription,
       dueDate: enteredDueDate,
+      archived: false,
     });
   }
 

@@ -6,6 +6,7 @@ export default function selectedProject({
   onDelete,
   project,
   tasks,
+  onHandleCheck,
 }) {
   const formattedDate = new Date(project.dueDate).toLocaleDateString("en-US", {
     year: "numeric",
@@ -32,7 +33,12 @@ export default function selectedProject({
           {project.description}
         </p>
       </header>
-      <Tasks onAdd={onAddTask} onDelete={onDeleteTask} tasks={tasks} />
+      <Tasks
+        onHandleCheck={onHandleCheck}
+        onAdd={onAddTask}
+        onDelete={onDeleteTask}
+        tasks={tasks}
+      />
     </div>
   );
 }
